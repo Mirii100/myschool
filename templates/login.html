@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Login - eLearning Platform
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2 class="text-center">Login</h2>
+        
+        <form method="POST" class="login-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            
+            <div class="form-submit">
+                <input type="submit" name="submit" class="submit" value="Login" />
+            </div>
+        </form>
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger mt-3">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

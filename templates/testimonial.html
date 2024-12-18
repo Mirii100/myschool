@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{%load static %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+    Testimonials
+{% endblock %}
+
+{% block body %}
+    <!-- Testimonial Section -->
+    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
+            <div class="text-center">
+                <h6 class="section-title bg-white text-center text-primary px-3">Testimonial</h6>
+                <h1 class="mb-5">Our Students Say!</h1>
+            </div>
+
+            <!-- Loop through testimonials -->
+           
+        </div>
+    </div>
+
+    <!-- Testimonial Form -->
+    <div class="container">
+        <h2>Submit Your Testimonial</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary">Submit Testimonial</button>
+        </form>
+    </div>
+
+{% endblock %}

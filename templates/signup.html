@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{%block body %}
+    
+    
+
+
+{%block title%} Register{%endblock%}
+
+ 
+<div class="main">
+    <center>
+    <div class="container">
+        
+        <form method="POST" class="appointment-form" id="appointment-form" action="{% url 'homepage' %}">
+            {% csrf_token %}
+            <h2>Signup Page</h2>
+
+            <div class="form-group-1">
+               
+                <!-- Title Dropdown -->
+                <label for="title">{{ form.title.label }}</label>
+                <p>{{ form.title }}</p>
+                
+                <!-- User Input Fields -->
+                <p>Name: {{ form.name }}</p>
+               
+                <p>Email: {{ form.email }}</p>
+               
+                <p>Phone Number: {{ form.phone_number }}</p>
+            </div>
+
+            <!-- Other sections (Course Type, Confirmation Type, etc.) remain unchanged -->
+            <div class="form-group-2">
+                <label for="course_type"><h3>Course Type:</h3></label>
+                {{ form.course_type }}
+
+                <label for="confirm_type"><h3>Confirmation Type: </h3></label>
+                {{ form.confirm_type }}
+            </div>
+
+            <div class="form-group-3">
+                <label for="contact_hours"><h3>Preferred Contact Hours</h3></label>
+                {{ form.contact_hours }}
+            </div>
+
+            <div class="form-check">
+                {{ form.agree_terms }}
+                <label for="agree_terms" class="label-agree-term">I agree to the <a href="">terms and conditions</a></label>
+            </div>
+
+            <div class="form-submit">
+                <input type="submit" name="submit" id="submit" class="submit" value="Signup" />
+                <p>Already have an account? <a href="{%url 'login'%}">Login</a></p>
+            </div>
+        </form>
+    
+    </div>
+</center>
+</div>
+
+<!-- JS -->
+<link rel="stylesheet" href="{% static 'sign/fonts/material-icon/css/material-design-iconic-font.min.css' %}">
+
+<!-- Main css -->
+<link rel="stylesheet" href="{% static 'sign/css/style.css' %}">
+</head>
+<script src="{% static 'sign/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'sign/js/main.js' %}"></script>
+{%endblock%}
