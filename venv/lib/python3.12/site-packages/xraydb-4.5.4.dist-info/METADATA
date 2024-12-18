@@ -1,0 +1,46 @@
+Metadata-Version: 2.1
+Name: xraydb
+Version: 4.5.4
+Summary: X-ray Reference Data for the Elements using SQLite
+Home-page: https://xraypy.github.io/XrayDB/
+Author: Matthew Newville
+Author-email: matt.newville@gmail.com
+License: MIT License
+Project-URL: Source, https://github.com/xraypy/XrayDB
+Project-URL: Documentation, https://xraypy.github.io/XrayDB
+Project-URL: Tracker, https://github.com/xraypy/XrayDB/issues
+Keywords: X-ray
+Platform: any
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Scientific/Engineering :: Visualization
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.8
+License-File: LICENSE
+Requires-Dist: numpy >=1.12
+Requires-Dist: scipy >=1.5
+Requires-Dist: sqlalchemy >=2.0.1
+Requires-Dist: platformdirs
+Requires-Dist: packaging
+Provides-Extra: doc
+Requires-Dist: sphinx ; extra == 'doc'
+Provides-Extra: test
+Requires-Dist: pytest ; extra == 'test'
+
+
+
+xraydb provides reference data for X-ray interactions with
+matter and a python module with functions for working with
+these data. The data is assembled into an SQLite3 database
+xraydb.sqlite.
