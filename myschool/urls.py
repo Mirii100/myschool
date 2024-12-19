@@ -7,7 +7,7 @@ urlpatterns = [
     path('courses/',views.course ,name='courses'),
     path('instructors/',views.instructors ,name='instructors'),
     path('login/',views.login ,name='login'),
-    
+    path('user/',views.create_user_view ,name='user'),
     path('signup/',views.signup ,name='signup'),
     path('testmonials/',views.testmonies ,name='testmonials'),
     path('ctestmonials/',views.create_testimonial ,name='ctestmonials'),

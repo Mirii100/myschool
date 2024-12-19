@@ -1,11 +1,19 @@
 from django import forms
-from .models import Signup
+from .models import Signup,Document,MyUserProfile
 from django.contrib.auth.forms import AuthenticationForm
 from .models import UserProfile,Testimonial
 
+from django import forms
+from django.contrib.auth.models import User
+from .models import Signup,MySignup
+
 class SignupForm(forms.ModelForm):
+    # Add password and confirm_password fields for validation
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")
+    confirm_password = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+    
     class Meta:
-        model = Signup
+        model = Signup  # Assuming Signup model is the one storing user data
         fields = ['title', 'name', 'email', 'phone_number', 'course_type', 
                   'confirm_type', 'contact_hours', 'agree_terms']
         labels = {
@@ -19,6 +27,15 @@ class SignupForm(forms.ModelForm):
             'agree_terms': 'I agree to the terms and conditions'
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+        
+        if password != confirm_password:
+            raise forms.ValidationError("Passwords do not match.")
+        
+        return cleaned_data
 
 
 class UserProfileForm(forms.ModelForm):
@@ -65,5 +82,38 @@ class TestimonialForm(forms.ModelForm):
 
 
 
-from .models import Instructor
+
+class DocumentForm(forms.ModelForm):
+    class Meta:
+        model = Document
+        fields = ['title', 'file']
+
+
+class MyUserProfileForm(forms.ModelForm):
+    class Meta:
+        model = MyUserProfile
+        fields = ['profile_picture', 'address', 'phone_number', 'date_of_birth', 'bio']
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+            'bio': forms.Textarea(attrs={'rows': 4}),
+        }
+
+class MySignupForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)
+    
+    class Meta:
+        model = MySignup
+        fields = ['title', 'name', 'email', 'phone_number', 'course_type',
+                 'confirm_type', 'contact_hours', 'agree_terms']
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+        
+        if password != confirm_password:
+            raise forms.ValidationError("Passwords do not match.")
+        return cleaned_data
+   
 

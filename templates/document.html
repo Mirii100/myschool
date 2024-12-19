@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document Upload</title>
+</head>
+<body>
+    <h1>Upload a Document</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload</button>
+    </form>
+
+    <h2>Uploaded Documents</h2>
+    <ul>
+        {% for doc in documents %}
+            <li>
+                <a href="{{ doc.file.url }}">{{ doc.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

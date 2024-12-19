@@ -1,9 +1,11 @@
 from django.contrib import admin
-from .models import Signup,Testimonial,courses,Instructor,Specialization,Book,Project
+from .models import Signup,Testimonial,courses,Instructor,Specialization,Book,Project,MyUserProfile,MySignup
 # Register your models here.
 admin.site.register(Signup)
+admin.site.register(MySignup)
 admin.site.register(Testimonial)
 admin.site.register(courses)
+admin.site.register(MyUserProfile)
 admin.site.register(Specialization)
 
 @admin.register(Instructor)

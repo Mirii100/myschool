@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import date
 
+date_of_birth = models.DateField(default=date(2000, 1, 1))
+
+import datetime
 
 class Specialization(models.Model):
     specialization_id = models.AutoField(primary_key=True)
@@ -412,4 +416,39 @@ class Project(models.Model):
         ordering = ['start_date']  # Default ordering by start date
 
 
+# for documents 
 
+class Document(models.Model):
+    title = models.CharField(max_length=100)
+    file = models.FileField(upload_to='documents/')
+
+    def __str__(self):
+        return self.title
+
+
+
+class MyUserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_picture = models.ImageField(upload_to='profile_pics/', null=True,blank=True)
+    address = models.TextField(null=True, blank=True)
+    phone_number = models.CharField(max_length=15, null=True, blank=True, default='Unknown')
+    date_of_birth = models.DateField(default='2000, 1, 1')
+    bio = models.TextField(null=True, blank=True, default='No bio provided')
+    
+    def __str__(self):
+        return f"{self.user.username}'s profile"
+
+
+
+class MySignup(models.Model):
+    title = models.CharField(max_length=10)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone_number = models.CharField(max_length=15)
+    course_type = models.CharField(max_length=50)
+    confirm_type = models.CharField(max_length=50)
+    contact_hours = models.CharField(max_length=50)
+    agree_terms = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return self.name
