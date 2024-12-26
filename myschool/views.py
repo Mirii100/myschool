@@ -1,15 +1,14 @@
-from django.shortcuts import render,redirect,get_object_or_404
-from . models import Signup,UserProfile,Testimonial,courses,Document
-from .form import SignupForm,UserProfileForm,LoginForm,TestimonialForm,DocumentForm,MyUserProfileForm
+from django.shortcuts import render,redirect
+from . models import Signup,UserProfile,Testimonial,courses,CoursesCategory
+from .form import SignupForm,UserProfileForm,LoginForm,TestimonialForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login,logout
-from .utils import read_pdf, read_docx 
-from django.contrib.auth.models import User
-from django.contrib import messages
+from django.contrib.auth import authenticate, login
+
 # Create your views here.
 
 
-
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
 def logout_view(request):
     logout(request)
@@ -22,8 +21,9 @@ def dashboard(request):
 
 def index(request):
     testimonials = Testimonial.objects.all()
-    form = Signup.COURSE_CHOICES
-    return render(request, 'index.html',{'testimonials':testimonials,'form':form})
+    testimonial = Testimonial.objects.filter(status=True)
+    form = courses.COURSE_CHOICES
+    return render(request, 'index.html',{'testimonials':testimonials,'form':form,'testimonial':testimonial})
 
 
 def instructors(request):
@@ -34,29 +34,27 @@ def student(request):
 
 #for enloring to a course 
 def join(request):
-    return render(request,"base.html")
+    testimonials = Testimonial.objects.filter(status=True) 
+    testmony=Testimonial.objects.all()
+    return render(request,"base.html",{'testimonials':testimonials,'testimonial':testmony})
 
 
 def signup(request):
     if request.method == 'POST':
-        form = SignupForm(request.POST, request.FILES)  # Include request.FILES for handling file uploads
+        form = SignupForm(request.POST)
         form1 = UserProfileForm(request.POST)
-        
-        # Check if a user already exists with the given email
-        email = request.POST.get('email')
-        if Signup.objects.filter(email=email).exists():
-            # Add an error message or redirect to a different page
-            form.add_error('email', 'An account with this email already exists.')
-        elif form.is_valid() and form1.is_valid():
+        if form.is_valid():
             # Save the form data to the database
             form.save()
-            form1.save()  # Make sure to save the UserProfileForm data as well
-            return redirect('login')  # Redirect to the login page after successful signup
+            return redirect('homepage')  # Redirect to another page after saving
     else:
         form = SignupForm()
         form1 = UserProfileForm()
-
-    return render(request, 'signup.html', {'form': form, 'form1': form1})
+    
+    
+    
+    
+    return render(request, 'signup.html', {'form': form,'form1': form1})
 
 def login(request):
     if request.method == 'POST':
@@ -65,7 +63,7 @@ def login(request):
             # Check if user agrees to the terms
             if not form.cleaned_data['agree_to_terms']:
                 form.add_error('agree_to_terms', 'You must agree to the terms and conditions')
-                return render(request, 'login.html', {'form': form})
+                return render(request, 'signup.html', {'form': form})
 
             # Authenticate the user
             username = form.cleaned_data['username']
@@ -86,23 +84,26 @@ def login(request):
     
 # for courses
 def testmonies(request):
-    testimonials = Testimonial.objects.filter(status=True)  # Display only active testimonials
+    testimonials = Testimonial.objects.filter(status=True) 
+    testmony=Testimonial.objects.all() # Display only active testimonials
     if request.method == 'POST':
         form = TestimonialForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()  # Save the new testimonial to the database
-            return redirect('ctestmonials')  # Redirect to the testimonial page
+            return redirect('testmonials')  # Redirect to the testimonial page
     else:
         form = TestimonialForm()
 
-    return render(request, 'testimonial.html', {'form': form, 'testimonials': testimonials})
+    return render(request, 'testimonial.html', {'form': form, 'testimonials': testimonials,'testimonial':testmony})
     
 
 def about(request):
     return render(request,"about.html")
 def course(request):
+    categories=CoursesCategory.objects.all()
     form = courses.COURSE_CHOICES
-    return render(request,"ourcourses.html",{'form':form})
+    forms=courses.image
+    return render(request,"ourcourses.html",{'form':form,'forms':forms,'categories':categories})
 def contact(request):
     return render(request,"contact.html")
 
@@ -110,6 +111,7 @@ def contact(request):
 @login_required
 def create_testimonial(request):
     testimonials = Testimonial.objects.all()
+    form = TestimonialForm()
     if request.method == "POST":
         name = request.POST.get("name")
         profession = request.POST.get("profession")
@@ -130,91 +132,5 @@ def create_testimonial(request):
 
         return redirect("success_page")
 
-    return render(request, "testimonial.html",{"testimonials": testimonials})
+    return render(request, "testimonial.html",{"testimonials": testimonials,'form': form})
 
-
-
-# for  doc
-
-def document_view(request):
-    if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-    else:
-        form = DocumentForm()
-    
-    documents = Document.objects.all()
-    return render(request, 'document.html', {'form': form, 'documents': documents})
-
-
-
-def process_document(request, doc_id):
-    doc = get_object_or_404(Document, id=doc_id)
-    file_path = doc.file.path
-    content = ""
-
-    # Check file type and extract content
-    if file_path.endswith(".pdf"):
-        content = read_pdf(file_path)
-    elif file_path.endswith(".docx"):
-        content = read_docx(file_path)
-    else:
-        content = "Unsupported file format."
-
-    return render(request, 'document_content.html', {'content': content, 'document': doc})
-
-
-from django.contrib.auth.models import User
-from .form import MySignupForm, MyUserProfileForm
-
-def create_user_view(request):
-    if request.method == 'POST':
-        print("POST data:", request.POST)  # Debug line
-        print("FILES:", request.FILES)     # Debug line
-        
-        form = MySignupForm(request.POST)
-        profile_form = MyUserProfileForm(request.POST, request.FILES)
-        
-        if form.is_valid() and profile_form.is_valid():
-            try:
-                # Create User instance
-                user = User.objects.create_user(
-                    username=form.cleaned_data['email'],  # Using email as username
-                    email=form.cleaned_data['email'],
-                    password=form.cleaned_data['password']
-                )
-                user.save()
-                print(f"User created: {user.id}")  # Debug line
-                
-                # Save MySignup instance
-                signup = form.save(commit=False)
-                signup.save()
-                print(f"Signup saved: {signup.id}")  # Debug line
-                
-                # Save MyUserProfile instance
-                profile = profile_form.save(commit=False)
-                profile.user = user
-                profile.save()
-                print(f"Profile saved: {profile.id}")  # Debug line
-                
-                # Log the user in
-                login(request, user)
-                messages.success(request, 'Your account has been created successfully!')
-                return redirect('homepage')
-                
-            except Exception as e:
-                print(f"Error during save: {str(e)}")  # Debug line
-                messages.error(request, f'Error creating account: {str(e)}')
-        else:
-            print("Form errors:", form.errors)  # Debug line
-            print("Profile form errors:", profile_form.errors)  # Debug line
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = MySignupForm()
-        profile_form = MyUserProfileForm()
-    
-    return render(request, 'user.html', {
-        'form': form,
-        'profile_form': profile_form
-    })

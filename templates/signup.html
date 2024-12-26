@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
+{%block title%} Register{%endblock%}
 {%block body %}
     
     
 
 
-{%block title%} Register{%endblock%}
+
 
  
 <div class="main">
     <center>
     <div class="container">
         
-        <form method="POST" class="appointment-form" id="appointment-form" action="{% url 'signup' %}">
+        <form method="POST" class="appointment-form" id="appointment-form" action="{% url 'homepage' %}">
             {% csrf_token %}
             <h2>Signup Page</h2>
 
@@ -59,12 +60,12 @@
 </center>
 </div>
 
-<!-- JS -->
+<link rel="stylesheet" href="{% static 'sign/css/style.css' %}">
+
+    <script src="{% static 'sign/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'sign/js/main.js' %}"></script>
+
+
 <link rel="stylesheet" href="{% static 'sign/fonts/material-icon/css/material-design-iconic-font.min.css' %}">
 
-<!-- Main css -->
-<link rel="stylesheet" href="{% static 'sign/css/style.css' %}">
-</head>
-<script src="{% static 'sign/vendor/jquery/jquery.min.js' %}"></script>
-<script src="{% static 'sign/js/main.js' %}"></script>
 {%endblock%}

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-
+{%load static%}
 {% block title %}
-    Login - eLearning Platform
+    Login 
 {% endblock %}
 
 {% block body %}
@@ -25,4 +25,12 @@
             </div>
         {% endif %}
     </div>
+    <!-- Main css -->
+<link rel="stylesheet" href="{% static 'sign/css/style.css' %}">
+
+    <script src="{% static 'sign/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'sign/js/main.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'sign/fonts/material-icon/css/material-design-iconic-font.min.css' %}">
+
 {% endblock %}
