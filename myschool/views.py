@@ -45,22 +45,28 @@ def join(request):
     return render(request,"base.html",context)
 
 
+
 def signup(request):
     if request.method == 'POST':
-        form = SignupForm(request.POST)
+        form = SignupForm(request.POST, request.FILES)  # For file upload
         form1 = UserProfileForm(request.POST)
-        if form.is_valid():
-            # Save the form data to the database
-            form.save()
-            return redirect('homepage')  # Redirect to another page after saving
+        
+        if form.is_valid() and form1.is_valid():
+            # Save SignupForm data to the database
+            new_signup = form.save()
+            
+            # Save UserProfileForm data to the database
+            user_profile = form1.save(commit=False)  # Don't save yet, we want to add the signup user reference
+            user_profile.signup = new_signup  # Assuming you have a foreign key from UserProfile to Signup
+            user_profile.save()
+            
+            return redirect('login')  # Redirect to another page after saving
     else:
         form = SignupForm()
         form1 = UserProfileForm()
     
-    
-    
-    
-    return render(request, 'signup.html', {'form': form,'form1': form1})
+    return render(request, 'signup.html', {'form': form, 'form1': form1})
+
 
 def login(request):
     if request.method == 'POST':
@@ -148,4 +154,68 @@ def create_testimonial(request):
         return redirect("success_page")
 
     return render(request, "testimonial.html",{"testimonials": testimonials,'form': form})
+
+
+# views.py
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from .form import MySignupForm, MyUserProfileForm
+from django.contrib.auth.forms import AuthenticationForm
+
+def mysignup(request):
+    if request.method == 'POST':
+        user_form = MySignupForm(request.POST)
+        profile_form = MyUserProfileForm(request.POST)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            # Create User
+            user = user_form.save()
+            user.set_password(user_form.cleaned_data['password'])
+            user.save()
+
+            # Create UserProfile
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+
+            # Log the user in
+            login(request, user)
+            return redirect('dashboard')  # Redirect to dashboard after successful registration
+
+    else:
+        user_form = MySignupForm()
+        profile_form = MyUserProfileForm()
+
+    return render(request, 'signup.html', {'user_form': user_form, 'profile_form': profile_form})
+
+
+
+# views.py
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from .form import MyLoginForm
+
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            if user is not None:
+                login(request, user)
+                return redirect('dashboard')  # Redirect to dashboard if login is successful
+    else:
+        form = LoginForm()
+
+    return render(request, 'login.html', {'form': form})
+# views.py
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def dashboard(request):
+    return render(request, 'dashboard.html', {'username': request.user.username})
 

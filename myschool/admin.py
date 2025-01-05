@@ -1,11 +1,12 @@
 from django.contrib import admin
-from .models import Signup,Testimonial,courses,Instructor,Specialization,Book,Project,CoursesCategory
+from .models import Signup,Testimonial,courses,Instructor,Specialization,Book,Project,CoursesCategory,MyUser
 # Register your models here.
 admin.site.register(Signup)
 admin.site.register(Testimonial)
 admin.site.register(courses)
 admin.site.register(Specialization)
 admin.site.register(CoursesCategory)
+admin.site.register(MyUser)
 @admin.register(Instructor)
 class InstructorAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'email')

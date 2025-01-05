@@ -25,6 +25,15 @@
             </div>
         {% endif %}
     </div>
+
+    <!-- login.html -->
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+</form>
+
     <!-- Main css -->
 <link rel="stylesheet" href="{% static 'sign/css/style.css' %}">
 

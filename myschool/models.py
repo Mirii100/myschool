@@ -528,3 +528,15 @@ class Project(models.Model):
 
 
 
+class MyUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=15)
+    course_type = models.CharField(max_length=100)
+    confirm_type = models.CharField(max_length=100)
+    contact_hours = models.CharField(max_length=50)
+    agree_terms = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.user.username
+
+
