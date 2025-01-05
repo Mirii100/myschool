@@ -1,0 +1,36 @@
+{%extends 'base.html'%}
+{%load static%}
+
+{%  block title %}
+our ongoing projects 
+{%endblock%}
+
+{%block body%}
+
+
+
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-4">
+            <H1>AVAILABLE PROJECTS </H1>
+{% for pr in projects %}
+            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="service-item text-center pt-3">
+                    <div class="p-4">
+                        <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
+                        {{forloop.counter}}
+                        <h5 class="mb-3"> NAME: {{ pr.name }}</h5>
+                        
+                        <p> <b>description:</b> {{ pr.description }}</p>
+                        <p> <b> maanger   {{pr.client_name}}</b></p>
+                        <p> <b>start date  {{pr.start_date}}</b></p>
+                            <p> <b>expected fininsh date  {{pr.end_date}}</b></p>
+                            <p> <b> progress {{pr.status}}</b></p>
+                       
+                    </div>
+                </div>
+            </div>
+            {%endfor%}
+        </div></div></div>
+{%endblock%}

@@ -1,0 +1,41 @@
+{%extends 'base.html'%}
+{%load static%}
+
+{%  block title %}
+our books 
+{%endblock%}
+
+{%block body%}
+
+
+
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-4">
+
+{% for book in books %}
+            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="service-item text-center pt-3">
+                    <div class="p-4">
+                        <i class="fa fa-3x fa-graduation-cap text-primary mb-4"></i>
+                        <h5 class="mb-3">TITLE : {{ book.title }}</h5>
+                        <p><b>AUTHOUR :</b> {{ book.author }}</p>
+                        <p><b>ISBN :</b>{{ book.isbn }}</p>
+                        <p> <b>PUBLICATION DATE:</b> {{ book.publication_date }}</p>
+                        <p><b>PUBLISHER :</b>{{ book.publisher }}</p>
+                       
+                        <p><b>LANGUAGE:</b>{{ book.language }}</p>
+                        <p><b>DESCRIPTION:</b> {{ book.description }}</p>
+                        {% if book.available_copies == 0 %}
+                        <h3>Not available for now </h3>
+                        {%else%}
+                        <p><b>AVAILABLE COPIES:</b>{{ book.available_copies }}</p>
+                        {%endif %}
+                       
+                    </div>
+                </div>
+            </div>
+            {%endfor%}
+        </div></div></div>
+{%endblock%}

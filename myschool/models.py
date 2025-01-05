@@ -194,7 +194,7 @@ class Testimonial(models.Model):
         return f'{self.name} {self.status} {self.message} {self.image} {self.user}'
 class courses(models.Model):
 
-
+    id = models.AutoField(primary_key=True)
     COURSE_CHOICES = [
     # Computer Science and Technology
     ('cs', 'Computer Science'),
@@ -286,8 +286,8 @@ class courses(models.Model):
 ]
     course_type = models.CharField(max_length=50, choices=COURSE_CHOICES, verbose_name="Course Type")
     image = models.ImageField(upload_to='profile_images/', null=True, blank=True, verbose_name="Profile Image")
-    title = models.CharField(max_length=100, choices=COURSE_CHOICES, verbose_name="Title") 
-    name = models.CharField(max_length=255, verbose_name="comp",default='cs')
+    title = models.CharField(max_length=100, verbose_name="Title") 
+    course = models.CharField(max_length=255, verbose_name="comp",default='cs')
     def __str__(self):
         return f"  {self.title} - {self.image}, {self.name}"
     
@@ -296,8 +296,115 @@ class CoursesCategory(models.Model):
     COURSE_category=['Computer Science and Technology','Business and Commerce','Arts and Humanities',
                      'Science and Mathematics','Engineering','Health and Medical','Law and Governance','Miscellaneous']
     
-    #course=models.ForeignKey(courses,on_delete=models.CASCADE,default='cs',to_field='course_type',unique=True,null=True)
-    #m=models.OneToOneField(courses,unique=True,to_field='course_type',null=True,on_delete=models.CASCADE)
+   
+class courses(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    COURSE_CHOICES = [
+    # Computer Science and Technology
+    ('cs', 'Computer Science'),
+    ('ai', 'Artificial Intelligence'),
+    ('ml', 'Machine Learning'),
+    ('ds', 'Data Science'),
+    ('web_dev', 'Web Development'),
+    ('app_dev', 'Mobile Application Development'),
+    ('cybersec', 'Cyber Security'),
+    ('ethical_hacking', 'Ethical Hacking'),
+    ('software_dev', 'Software Development'),
+    ('networking', 'Computer Networking'),
+    ('cloud_computing', 'Cloud Computing'),
+    ('iot', 'Internet of Things (IoT)'),
+    ('blockchain', 'Blockchain Technology'),
+    ('devops', 'DevOps'),
+
+    # Business and Commerce
+    ('bcom', 'Commerce'),
+    ('mba', 'Master of Business Administration'),
+    ('accounting', 'Accounting and Finance'),
+    ('marketing', 'Marketing'),
+    ('hrm', 'Human Resource Management'),
+    ('entrepreneurship', 'Entrepreneurship'),
+    ('economics', 'Economics'),
+
+    # Arts and Humanities
+    ('literature', 'English Literature'),
+    ('history', 'History'),
+    ('philosophy', 'Philosophy'),
+    ('psychology', 'Psychology'),
+    ('sociology', 'Sociology'),
+    ('political_science', 'Political Science'),
+    ('linguistics', 'Linguistics'),
+    ('fine_arts', 'Fine Arts'),
+    ('music', 'Music'),
+    ('film_studies', 'Film Studies'),
+    ('design', 'Graphic Design'),
+
+    # Science and Mathematics
+    ('math', 'Mathematics'),
+    ('physics', 'Physics'),
+    ('chemistry', 'Chemistry'),
+    ('biology', 'Biology'),
+    ('geology', 'Geology'),
+    ('statistics', 'Statistics'),
+    ('environmental_science', 'Environmental Science'),
+    ('biotech', 'Biotechnology'),
+    ('astrophysics', 'Astrophysics'),
+
+    # Engineering
+    ('mech_eng', 'Mechanical Engineering'),
+    ('civil_eng', 'Civil Engineering'),
+    ('elec_eng', 'Electrical Engineering'),
+    ('elec_comm_eng', 'Electronics and Communication Engineering'),
+    ('chemical_eng', 'Chemical Engineering'),
+    ('aero_eng', 'Aerospace Engineering'),
+    ('biomed_eng', 'Biomedical Engineering'),
+    ('robotics', 'Robotics Engineering'),
+
+    # Health and Medical
+    ('medicine', 'Medicine'),
+    ('nursing', 'Nursing'),
+    ('pharmacy', 'Pharmacy'),
+    ('dentistry', 'Dentistry'),
+    ('physiotherapy', 'Physiotherapy'),
+    ('public_health', 'Public Health'),
+
+    # Law and Governance
+    ('law', 'Law'),
+    ('criminology', 'Criminology'),
+    ('forensics', 'Forensic Science'),
+    ('international_relations', 'International Relations'),
+    ('public_admin', 'Public Administration'),
+
+    # Miscellaneous
+    ('education', 'Education'),
+    ('sports_science', 'Sports Science'),
+    ('hospitality', 'Hospitality Management'),
+    ('tourism', 'Tourism and Travel'),
+    ('culinary_arts', 'Culinary Arts'),
+    ('journalism', 'Journalism and Mass Communication'),
+    ('fashion_design', 'Fashion Design'),
+    ('animation', 'Animation'),
+    ('agriculture', 'Agriculture'),
+    ('marine_biology', 'Marine Biology'),
+    ('veterinary', 'Veterinary Science'),
+    ('ai_ml', 'Artificial Intelligence & Machine Learning'),
+]
+    course_type = models.CharField(max_length=50, choices=COURSE_CHOICES, verbose_name="Course Type")
+    image = models.ImageField(upload_to='profile_images/', null=True, blank=True, verbose_name="Profile Image")
+    title = models.CharField(max_length=100, verbose_name="Title") 
+    coursename = models.CharField(max_length=255, verbose_name="comp",default='cs')
+    def __str__(self):
+        return f"  {self.title} - {self.image}, {self.name}"
+    
+class CoursesCategory(models.Model):
+    title = models.CharField(max_length=100)
+    id = models.AutoField(primary_key=True)
+    COURSE_category=['Computer Science and Technology','Business and Commerce','Arts and Humanities',
+                     'Science and Mathematics','Engineering','Health and Medical','Law and Governance','Miscellaneous']
+    
+   
+
+
 
 
 
@@ -311,6 +418,7 @@ class Instructor(models.Model):
 
     # Professional Information
     specialization = models.ManyToManyField('Specialization', related_name='instructors')
+    specialize=models.ForeignKey(CoursesCategory,on_delete=models.CASCADE,null=True)
     experience = models.IntegerField()  # Years of experience
     qualification = models.CharField(max_length=100)
     employment_type = models.CharField(
@@ -328,7 +436,7 @@ class Instructor(models.Model):
     reviews = models.TextField(blank=True, null=True)  # JSON or text for student reviews
 
     # Courses Taught
-    courses = models.ManyToManyField('Signup', related_name='COURSE_CHOICES')
+    course = models.ManyToManyField('CoursesCategory',related_name='COURSE_category')
     # Profile Details
     bio = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='instructors/profile_pictures/', blank=True, null=True)

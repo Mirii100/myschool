@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from . models import Signup,UserProfile,Testimonial,courses,CoursesCategory
+from . models import Signup,UserProfile,Testimonial,courses,CoursesCategory,Book,Project,Instructor
 from .form import SignupForm,UserProfileForm,LoginForm,TestimonialForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
@@ -27,16 +27,22 @@ def index(request):
 
 
 def instructors(request):
-    return render(request,"instructors.html")
+    OurInstructor=Instructor.objects.all()
+    context={'Ourinstructors':OurInstructor}
+
+    return render(request,"instructors.html",context)
 
 def student(request):
-    return render(request,"index.html")
+    sign=Signup.objects.all()
+    return render(request,"index.html",{"sign":sign})
 
 #for enloring to a course 
 def join(request):
     testimonials = Testimonial.objects.filter(status=True) 
     testmony=Testimonial.objects.all()
-    return render(request,"base.html",{'testimonials':testimonials,'testimonial':testmony})
+    sign=Signup.objects.all()
+    context={'testimonials':testimonials,'testimonial':testmony,'sign':sign}
+    return render(request,"base.html",context)
 
 
 def signup(request):
@@ -107,6 +113,15 @@ def course(request):
 def contact(request):
     return render(request,"contact.html")
 
+
+def getbooks(request):
+    books=Book.objects.all()
+    context={'books':books}
+    return render(request,"books.html",context)
+def ongoingProjects(request):
+    projects=Project.objects.all()
+    context={'projects':projects}
+    return render(request,"project.html",context)
 
 @login_required
 def create_testimonial(request):
