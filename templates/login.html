@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
-{%load static%}
+{% load static %}
+
 {% block title %}
-    Login 
+    Login
 {% endblock %}
 
 {% block body %}
@@ -10,11 +11,18 @@
         
         <form method="POST" class="login-form">
             {% csrf_token %}
-            {{ form.as_p }}
+        {{ form.as_p }}
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <button type="submit">Login</button>
+        <p>Don't have an account? <a href="{% url 'mysignup' %}">Sign Up</a></p>
             
-            <div class="form-submit">
-                <input type="submit" name="submit" class="submit" value="Login" />
-            </div>
         </form>
 
         {% if form.non_field_errors %}
@@ -26,20 +34,29 @@
         {% endif %}
     </div>
 
-    <!-- login.html -->
+    <!-- login.html 
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
+        <button type="submit">Login</button>
+        <p>Don't have an account? <a href="{% url 'mysignup' %}">Sign Up</a></p>
+    </form>
+-->
     <!-- Main css -->
-<link rel="stylesheet" href="{% static 'sign/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'sign/css/style.css' %}">
 
     <script src="{% static 'sign/vendor/jquery/jquery.min.js' %}"></script>
-<script src="{% static 'sign/js/main.js' %}"></script>
+    <script src="{% static 'sign/js/main.js' %}"></script>
 
-<link rel="stylesheet" href="{% static 'sign/fonts/material-icon/css/material-design-iconic-font.min.css' %}">
+    <link rel="stylesheet" href="{% static 'sign/fonts/material-icon/css/material-design-iconic-font.min.css' %}">
 
 {% endblock %}

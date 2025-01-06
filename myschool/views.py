@@ -1,14 +1,20 @@
 from django.shortcuts import render,redirect
 from . models import Signup,UserProfile,Testimonial,courses,CoursesCategory,Book,Project,Instructor
-from .form import SignupForm,UserProfileForm,LoginForm,TestimonialForm
+from .form import SignupForm,UserProfileForm,LoginForm,TestimonialForm,MySignupForm, MyUserProfileForm,MyLoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 
+from django.contrib.auth.models import User
+
+from django.contrib import messages  # Import messages framework
+
+
+from django.contrib.auth.forms import AuthenticationForm
 # Create your views here.
 
 
 from django.contrib.auth import logout
-from django.shortcuts import redirect
+
 
 def logout_view(request):
     logout(request)
@@ -45,55 +51,6 @@ def join(request):
     return render(request,"base.html",context)
 
 
-
-def signup(request):
-    if request.method == 'POST':
-        form = SignupForm(request.POST, request.FILES)  # For file upload
-        form1 = UserProfileForm(request.POST)
-        
-        if form.is_valid() and form1.is_valid():
-            # Save SignupForm data to the database
-            new_signup = form.save()
-            
-            # Save UserProfileForm data to the database
-            user_profile = form1.save(commit=False)  # Don't save yet, we want to add the signup user reference
-            user_profile.signup = new_signup  # Assuming you have a foreign key from UserProfile to Signup
-            user_profile.save()
-            
-            return redirect('login')  # Redirect to another page after saving
-    else:
-        form = SignupForm()
-        form1 = UserProfileForm()
-    
-    return render(request, 'signup.html', {'form': form, 'form1': form1})
-
-
-def login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            # Check if user agrees to the terms
-            if not form.cleaned_data['agree_to_terms']:
-                form.add_error('agree_to_terms', 'You must agree to the terms and conditions')
-                return render(request, 'signup.html', {'form': form})
-
-            # Authenticate the user
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
-            
-            if user is not None:
-                login(request, user)  # Log the user in
-                return redirect('homepage')  # Redirect to the homepage after successful login
-            else:
-                form.add_error(None, 'Invalid username or password')  # Add error for invalid credentials
-        else:
-            return render(request, 'login.html', {'form': form})
-    else:
-        form = LoginForm()
-
-    return render(request, 'login.html', {'form': form})
-    
 # for courses
 def testmonies(request):
     testimonials = Testimonial.objects.filter(status=True) 
@@ -156,14 +113,6 @@ def create_testimonial(request):
     return render(request, "testimonial.html",{"testimonials": testimonials,'form': form})
 
 
-# views.py
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib.auth import login
-from .form import MySignupForm, MyUserProfileForm
-from django.contrib.auth.forms import AuthenticationForm
-
 def mysignup(request):
     if request.method == 'POST':
         user_form = MySignupForm(request.POST)
@@ -182,7 +131,7 @@ def mysignup(request):
 
             # Log the user in
             login(request, user)
-            return redirect('dashboard')  # Redirect to dashboard after successful registration
+            return redirect('mylogin')  # Redirect to dashboard after successful registration
 
     else:
         user_form = MySignupForm()
@@ -191,29 +140,27 @@ def mysignup(request):
     return render(request, 'signup.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
-
-# views.py
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-from .form import MyLoginForm
-
 def login_view(request):
     if request.method == 'POST':
-        form = LoginForm(request.POST)
+        form = MyLoginForm(request.POST)
         if form.is_valid():
-            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('dashboard')  # Redirect to dashboard if login is successful
+                messages.success(request, f"Welcome {user.username}! You have successfully logged in.")
+                print("Redirecting to dashboard...")
+                return redirect('dashboard')
+            else:
+                messages.error(request, "Invalid username or password. Please try again.")
+        else:
+            messages.error(request, "Please correct the errors below.")
     else:
-        form = LoginForm()
+        form = MyLoginForm()
 
     return render(request, 'login.html', {'form': form})
-# views.py
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def dashboard(request):

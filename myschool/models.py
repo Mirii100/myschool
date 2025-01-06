@@ -392,7 +392,7 @@ class courses(models.Model):
     course_type = models.CharField(max_length=50, choices=COURSE_CHOICES, verbose_name="Course Type")
     image = models.ImageField(upload_to='profile_images/', null=True, blank=True, verbose_name="Profile Image")
     title = models.CharField(max_length=100, verbose_name="Title") 
-    coursename = models.CharField(max_length=255, verbose_name="comp",default='cs')
+    name = models.CharField(max_length=255, verbose_name="comp",default='cs')
     def __str__(self):
         return f"  {self.title} - {self.image}, {self.name}"
     
