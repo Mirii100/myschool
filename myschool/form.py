@@ -1,6 +1,8 @@
 from django import forms
 from .models import Signup
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
+
 from django.contrib.auth.forms import AuthenticationForm
 from .models import UserProfile,Testimonial,MyUser
 from django.contrib.auth.models import User
@@ -66,8 +68,6 @@ class TestimonialForm(forms.ModelForm):
 
 
 
-
-
 class MySignupForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     password_confirm = forms.CharField(widget=forms.PasswordInput)
@@ -88,12 +88,41 @@ class MySignupForm(forms.ModelForm):
 class MyUserProfileForm(forms.ModelForm):
     class Meta:
         model = MyUser
-        fields = ['phone_number', 'course_type', 'confirm_type', 'contact_hours', 'agree_terms']
+        fields = ['phone_number', 'course_type', 'confirm_type', 'contact_hours','profile_image', 'agree_terms']
 
 
 
 class MyLoginForm(AuthenticationForm):
-    pass
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Username',
+            'class': 'form-control'
+        }), 
+        label="Username"
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Password',
+            'class': 'form-control'
+        }), 
+        label="Password"
+    )
+
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        
+        if username and password:
+            self.user_cache = authenticate(
+                username=username,
+                password=password
+            )
+            if self.user_cache is None:
+                raise forms.ValidationError(
+                    "Please enter a correct username and password."
+                )
+        return self.cleaned_data
+
 
 
 

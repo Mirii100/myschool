@@ -1,47 +1,97 @@
 {% extends 'base.html' %}
-{% load static %}
-{%block title%} Register{%endblock%}
-{%block body %}
-    
-    
+{% block title %}
+Signup Page
+{% endblock %}
+{% load crispy_forms_tags %}
 
-
-
-
- 
-<div class="main">
-    <center>
+{% block body %}
+<center>
     <div class="container">
-        
-        <form method="POST" class="appointment-form" id="appointment-form" action="{% url 'homepage' %}">
-            signup
+        <form method="POST" class="appointment-form" id="appointment-form" action="{% url 'mysignup' %}">
+           
             {% csrf_token %}
-            {{ user_form.as_p }}
-            {{ profile_form.as_p }}
+            <h2>Sign Up</h2>
+            
+
+            <!-- User Form Fields -->
+            <h3>User Details</h3>
+            <div>
+                <label for="{{ user_form.username.id_for_label }}">{{ user_form.username.label }}</label>
+                {{ user_form.username }}
+                {% if user_form.username.errors %}
+                    <div class="error">{{ user_form.username.errors }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ user_form.email.id_for_label }}">{{ user_form.email.label }}</label>
+                {{ user_form.email }}
+                {% if user_form.email.errors %}
+                    <div class="error">{{ user_form.email.errors }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ user_form.password.id_for_label }}">{{ user_form.password.label }}</label>
+                {{ user_form.password }}
+                {% if user_form.password.errors %}
+                    <div class="error">{{ user_form.password.errors }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ user_form.password_confirm.id_for_label }}">{{ user_form.password_confirm.label }}</label>
+                {{ user_form.password_confirm }}
+                {% if user_form.password_confirm.errors %}
+                    <div class="error">{{ user_form.password_confirm.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Profile Form Fields -->
+            <h3>Profile Details</h3>
+            <div>
+                <label for="{{ profile_form.phone_number.id_for_label }}">{{ profile_form.phone_number.label }}</label>
+                {{ profile_form.phone_number }}
+                {% if profile_form.phone_number.errors %}
+                    <div class="error">{{ profile_form.phone_number.errors }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ profile_form.course_type.id_for_label }}">{{ profile_form.course_type.label }}</label>
+                {{ profile_form.course_type }}
+                {% if profile_form.course_type.errors %}
+                    <div class="error">{{ profile_form.course_type.errors }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ profile_form.confirm_type.id_for_label }}">{{ profile_form.confirm_type.label }}</label>
+                {{ profile_form.confirm_type }}
+                {% if profile_form.confirm_type.errors %}
+                    <div class="error">{{ profile_form.confirm_type.errors }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ profile_form.contact_hours.id_for_label }}">{{ profile_form.contact_hours.label }}</label>
+                {{ profile_form.contact_hours }}
+                {% if profile_form.contact_hours.errors %}
+                    <div class="error">{{ profile_form.contact_hours.errors }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ profile_form.profile_image.id_for_label }}">Profile Image</label>
+                {{ profile_form.profile_image }}
+                {% if profile_form.profile_image.errors %}
+                    <div class="error">{{ profile_form.profile_image.errors }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ profile_form.agree_terms.id_for_label }}">{{ profile_form.agree_terms.label }}</label>
+                {{ profile_form.agree_terms }}
+                {% if profile_form.agree_terms.errors %}
+                    <div class="error">{{ profile_form.agree_terms.errors }}</div>
+                {% endif %}
+            </div>
+
             <button type="submit">Sign Up</button>
-            <p>Already have an account? <a href="{% url 'mylogin'%}">Login</a></p>
+            <p>Already have an account? <a href="{% url 'mylogin' %}">Login</a></p>
         </form>
-    
     </div>
 </center>
-</div>
-<!-- signup.html 
-
-<form method="POST">
-    {% csrf_token %}
-    {{ user_form.as_p }}
-    {{ profile_form.as_p }}
-    <button type="submit">Sign Up</button>
-    <p>Already have an account? <a href="{% url 'mylogin'%}">Login</a></p>
-</form>
--->
-
-<link rel="stylesheet" href="{% static 'sign/css/style.css' %}">
-
-    <script src="{% static 'sign/vendor/jquery/jquery.min.js' %}"></script>
-<script src="{% static 'sign/js/main.js' %}"></script>
-
-
-<link rel="stylesheet" href="{% static 'sign/fonts/material-icon/css/material-design-iconic-font.min.css' %}">
-
-{%endblock%}
+{% endblock %}

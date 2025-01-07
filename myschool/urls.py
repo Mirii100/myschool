@@ -2,11 +2,13 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.views import LogoutView
 urlpatterns = [
     path('',views.index ,name='homepage'),
     path('courses/',views.course ,name='courses'),
     path('instructors/',views.instructors ,name='instructors'),
-   
+   path('log/', LogoutView.as_view(next_page='homepage'), name='logo'),
+    path('logout/', views.logout_view, name='logout'),
      path('mylogin/', views.login_view, name='mylogin'),
      path('dashboard/', views.dashboard, name='dashboard'),
      path('mysignup/', views.mysignup, name='mysignup'),

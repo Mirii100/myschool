@@ -33,29 +33,32 @@
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="{% url 'homepage'%}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
             <h2 class="m-0 text-primary"><i class="fa fa-book me-3"></i>ALEXIA EDUCATION CENTER</h2>
-
         </a>
         
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
-            <h1>hae{{testimonials.name}}</h1>
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="{%url 'homepage'%}" class="nav-item nav-link active">Home</a>
-                <a href="{%url 'about'%}" class="nav-item nav-link">About</a>
-                <a href="{%url 'courses'%}" class="nav-item nav-link">Courses</a>
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                    <div class="dropdown-menu fade-down m-0">
-                        <a href="{%url 'instructors'%}" class="dropdown-item">Our Team</a>
-                        <a href="{%url 'ctestmonials'%}" class="dropdown-item">Testimonial</a>
-                        <a href="{%url 'testmonials'%}" class="dropdown-item">CREATE TESTIMONIAL</a>
+                {% if user.is_authenticated %}
+                    <!-- Show these items only when user is logged in -->
+                    <a href="{% url 'dashboard' %}" class="nav-item nav-link active">Dashboard</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                        <div class="dropdown-menu fade-down m-0">
+                            <a href="{% url 'instructors' %}" class="dropdown-item">Our Team</a>
+                        </div>
                     </div>
-                </div>
-                <a href="{%url 'contacts'%}" class="nav-item nav-link">Contact</a>
+                    <a href="{% url 'logout' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Logout</a>
+                {% else %}
+                    <!-- Show these items when user is not logged in -->
+                    <a href="{% url 'homepage' %}" class="nav-item nav-link active">Home</a>
+                    <a href="{% url 'about' %}" class="nav-item nav-link">About</a>
+                    <a href="{% url 'courses' %}" class="nav-item nav-link">Courses</a>
+                    <a href="{% url 'contacts' %}" class="nav-item nav-link">Contact</a>
+                    <a href="{% url 'mysignup' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
+                {% endif %}
             </div>
-            <a href="{%url 'mysignup'%}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
         </div>
     </nav>
     {% block body%}
@@ -71,7 +74,7 @@
             <div class="owl-carousel testimonial-carousel position-relative">
                 {% for testmonial in testimonials%}
                     <div class="testimonial-item text-center">
-                        <img class="border rounded-circle p-2 mx-auto mb-3" src="{{ testimonial.image.url }}" style="width: 80px; height: 80px;" alt="">
+                        <img class="border rounded-circle p-2 mx-auto mb-3" src={{testimonial.image.url}} style="width: 80px; height: 80px;" alt="">
                         <h5 class="mb-0">{{ testmonial.name }}</h5>
                         <p>{{ testmonial.profession }}</p>
                         <div class="testimonial-text bg-light text-center p-4">

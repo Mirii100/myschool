@@ -70,7 +70,7 @@ WSGI_APPLICATION = 'onlineSchool.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'myschool',         # Database name
+        'NAME': 'school',         # Database name
         'USER': 'postgres',       # PostgreSQL user
         'PASSWORD': 'alex',      # Password for the user
         'HOST': 'localhost',           # Or use your database server's IP
@@ -135,17 +135,3 @@ LOGOUT_REDIRECT_URL = 'mylogin'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-LOGGING = {
-    'version': 1,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-    },
-}
