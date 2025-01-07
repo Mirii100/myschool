@@ -161,6 +161,9 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 # Check if the user has a UserProfile, and create one if not
+                if not hasattr(user, 'userprofile'):
+                    UserProfile.objects.create(user=user)
+                    
                 
                 messages.success(request, f"Welcome {user.username}! You have successfully logged in.")
                 return redirect('dashboard')

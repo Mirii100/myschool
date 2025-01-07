@@ -7,17 +7,9 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 
 # Create UserProfile after saving User
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
 
 # Save the UserProfile when the User is saved
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.userprofile.save()
 
-    
 class Specialization(models.Model):
     specialization_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)  # E.g., "Software Engineer"
@@ -212,7 +204,7 @@ class courses(models.Model):
     
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,default=None)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,default=None,related_name='userprofile')
     title = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
     email = models.EmailField()
@@ -225,7 +217,18 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.course}"
+    
 
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+    
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.userprofile.save()
 
 class Testimonial(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)  # Allow null value

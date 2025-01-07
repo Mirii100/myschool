@@ -40,6 +40,15 @@
                                     <p><strong>Currently Enrolled In:</strong> {{ user.myuser.get_course_type_display }}</p>
                                     <p><strong>Confirmation Status:</strong> {{ user.myuser.get_confirm_type_display }}</p>
                                 </div>
+                                <h2>Units for {{ user.username }} ({{ user.userprofile.course }})</h2>
+
+<ul>
+    {% for unit in units %}
+        <li>{{ unit.unit_name }} ({{ unit.unit_code }})</li>
+    {% empty %}
+        <p>No units available for your course yet.</p>
+    {% endfor %}
+</ul>
                             {% else %}
                                 <div class="alert alert-warning">
                                     <p>No course information available.</p>
@@ -52,15 +61,7 @@
         </div>
     </div>
 </div>
-<h2>Units for {{ user.username }} ({{ user.userprofile.course }})</h2>
 
-<ul>
-    {% for unit in units %}
-        <li>{{ unit.unit_name }} ({{ unit.unit_code }})</li>
-    {% empty %}
-        <p>No units available for your course yet.</p>
-    {% endfor %}
-</ul>
 <h2>Units for {{ user.username }} ({{ user.userprofile.course }})</h2>
 
 <ul>
