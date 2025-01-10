@@ -159,10 +159,10 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
+                UserProfile.objects.get_or_create(user=user)
                 login(request, user)
                 # Check if the user has a UserProfile, and create one if not
-                if not hasattr(user, 'userprofile'):
-                    UserProfile.objects.create(user=user)
+               
                     
                 
                 messages.success(request, f"Welcome {user.username}! You have successfully logged in.")
@@ -180,10 +180,28 @@ def login_view(request):
 @login_required
 def dashboard(request):
     user = request.user
-    user_profile = request.user.userprofile
-    user_course = user_profile.course
-
-    units = Unit.objects.filter(course=user_course)
-    return render(request, 'dashboard.html', {'username': request.user.username,'user': user,'units': units})
-
+    try:
+        user_profile = request.user.userprofile
+        # Print debug information
+        print(f"User Profile Course: {user_profile.course}")
+        print(f"User Profile Course Type: {user_profile.course_type}")
+        user_course = user_profile.course
+        # Try filtering by both course and course_type
+        units = Unit.objects.filter(course=user_course)
+        print(f"Found {units.count()} units")
+        all_units = Unit.objects.all()
+        print("All Units:", [(unit.unit_name, unit.course) for unit in all_units])
+        print(f"Total units in database: {all_units.count()}")
+        print("Available units:", [(u.unit_name, u.course) for u in all_units])
+        return render(request, 'dashboard.html', 
+                {
+            'username': request.user.username,
+            'user': user,
+            'units': units,
+            'all_units': all_units,
+            'user_profile': user_profile,
+            })
+    except UserProfile.DoesNotExist:
+        messages.error(request, "User profile not found")
+        return redirect('mylogin')
 

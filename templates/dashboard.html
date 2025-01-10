@@ -42,14 +42,11 @@
                                 </div>
                                 <h2>Units for {{ user.username }} ({{ user.userprofile.course }})</h2>
 
-<ul>
-    {% for unit in units %}
-        <li>{{ unit.unit_name }} ({{ unit.unit_code }})</li>
-    {% empty %}
-        <p>No units available for your course yet.</p>
-    {% endfor %}
-</ul>
-                            {% else %}
+                                <ul>
+                                    {% for unit in all_units %}
+                                        <li>{{ unit.unit_name }} (Course: {{ unit.course }})</li>
+                                    {% endfor %}
+                                </ul>                    {% else %}
                                 <div class="alert alert-warning">
                                     <p>No course information available.</p>
                                 </div>
@@ -62,13 +59,42 @@
     </div>
 </div>
 
-<h2>Units for {{ user.username }} ({{ user.userprofile.course }})</h2>
-
-<ul>
-    {% for unit in units %}
-        <li>{{ unit.unit_name }} ({{ unit.unit_code }})</li>
-    {% empty %}
-        <p>No units available for your course yet.</p>
-    {% endfor %}
-</ul>
+<div class="col-md-6">
+    <h4>Your Course Units</h4>
+    <hr>
+    <p><strong>Your Course:</strong> {{ user_profile.get_course_display }} ({{ user_profile.course }})</p>
+    <ul>
+        {% for unit in all_units %}
+            <li>{{ unit.unit_name }} (Course: {{ unit.course }})</li>
+        {% endfor %}
+    </ul>
+    
+    <div class="units-list">
+        {% if units %}
+            <ul class="list-group">
+                {% for unit in units %}
+                    <li class="list-group-item">
+                        <strong>{{ unit.unit_name }}</strong>
+                        <br>
+                        <small class="text-muted">Code: {{ unit.unit_code }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-info">
+                No units available for your course ({{ user_profile.course }}) yet.
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Debug section -->
+    <div class="mt-4">
+        <h5>All Available Units:</h5>
+        <ul>
+            {% for unit in all_units %}
+                <li>{{ unit.unit_name }} (Course: {{ unit.course }})</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}

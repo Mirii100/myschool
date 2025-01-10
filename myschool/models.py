@@ -204,11 +204,100 @@ class courses(models.Model):
     
 
 class UserProfile(models.Model):
+    COURSE_CHOICES = [
+    # Computer Science and Technology
+    ('cs', 'Computer Science'),
+    ('ai', 'Artificial Intelligence'),
+    ('ml', 'Machine Learning'),
+    ('ds', 'Data Science'),
+    ('web_dev', 'Web Development'),
+    ('app_dev', 'Mobile Application Development'),
+    ('cybersec', 'Cyber Security'),
+    ('ethical_hacking', 'Ethical Hacking'),
+    ('software_dev', 'Software Development'),
+    ('networking', 'Computer Networking'),
+    ('cloud_computing', 'Cloud Computing'),
+    ('iot', 'Internet of Things (IoT)'),
+    ('blockchain', 'Blockchain Technology'),
+    ('devops', 'DevOps'),
+
+    # Business and Commerce
+    ('bcom', 'Commerce'),
+    ('mba', 'Master of Business Administration'),
+    ('accounting', 'Accounting and Finance'),
+    ('marketing', 'Marketing'),
+    ('hrm', 'Human Resource Management'),
+    ('entrepreneurship', 'Entrepreneurship'),
+    ('economics', 'Economics'),
+
+    # Arts and Humanities
+    ('literature', 'English Literature'),
+    ('history', 'History'),
+    ('philosophy', 'Philosophy'),
+    ('psychology', 'Psychology'),
+    ('sociology', 'Sociology'),
+    ('political_science', 'Political Science'),
+    ('linguistics', 'Linguistics'),
+    ('fine_arts', 'Fine Arts'),
+    ('music', 'Music'),
+    ('film_studies', 'Film Studies'),
+    ('design', 'Graphic Design'),
+
+    # Science and Mathematics
+    ('math', 'Mathematics'),
+    ('physics', 'Physics'),
+    ('chemistry', 'Chemistry'),
+    ('biology', 'Biology'),
+    ('geology', 'Geology'),
+    ('statistics', 'Statistics'),
+    ('environmental_science', 'Environmental Science'),
+    ('biotech', 'Biotechnology'),
+    ('astrophysics', 'Astrophysics'),
+
+    # Engineering
+    ('mech_eng', 'Mechanical Engineering'),
+    ('civil_eng', 'Civil Engineering'),
+    ('elec_eng', 'Electrical Engineering'),
+    ('elec_comm_eng', 'Electronics and Communication Engineering'),
+    ('chemical_eng', 'Chemical Engineering'),
+    ('aero_eng', 'Aerospace Engineering'),
+    ('biomed_eng', 'Biomedical Engineering'),
+    ('robotics', 'Robotics Engineering'),
+
+    # Health and Medical
+    ('medicine', 'Medicine'),
+    ('nursing', 'Nursing'),
+    ('pharmacy', 'Pharmacy'),
+    ('dentistry', 'Dentistry'),
+    ('physiotherapy', 'Physiotherapy'),
+    ('public_health', 'Public Health'),
+
+    # Law and Governance
+    ('law', 'Law'),
+    ('criminology', 'Criminology'),
+    ('forensics', 'Forensic Science'),
+    ('international_relations', 'International Relations'),
+    ('public_admin', 'Public Administration'),
+
+    # Miscellaneous
+    ('education', 'Education'),
+    ('sports_science', 'Sports Science'),
+    ('hospitality', 'Hospitality Management'),
+    ('tourism', 'Tourism and Travel'),
+    ('culinary_arts', 'Culinary Arts'),
+    ('journalism', 'Journalism and Mass Communication'),
+    ('fashion_design', 'Fashion Design'),
+    ('animation', 'Animation'),
+    ('agriculture', 'Agriculture'),
+    ('marine_biology', 'Marine Biology'),
+    ('veterinary', 'Veterinary Science'),
+    ('ai_ml', 'Artificial Intelligence & Machine Learning'),
+]
     user = models.OneToOneField(User, on_delete=models.CASCADE,default=None,related_name='userprofile')
     title = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
     email = models.EmailField()
-    course = models.CharField(max_length=50, choices=courses.COURSE_CHOICES,default='cs')
+    course = models.CharField(max_length=50, choices=COURSE_CHOICES,default='cs')
     phone_number = models.CharField(max_length=15)
     course_type = models.CharField(max_length=100)
     confirm_type = models.CharField(max_length=100)
@@ -216,19 +305,9 @@ class UserProfile(models.Model):
     agree_terms = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.user.username} - {self.course}"
+        return f"{self.user.username} - {self.get_course_display()}"
     
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-
-    
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.userprofile.save()
 
 class Testimonial(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)  # Allow null value
@@ -245,14 +324,108 @@ class Testimonial(models.Model):
 
    
 class Unit(models.Model):
-    course = models.CharField(max_length=50, choices=courses.COURSE_CHOICES,default='cs')
+    COURSE_CHOICES = [
+    # Computer Science and Technology
+    ('cs', 'Computer Science'),
+    ('ai', 'Artificial Intelligence'),
+    ('ml', 'Machine Learning'),
+    ('ds', 'Data Science'),
+    ('web_dev', 'Web Development'),
+    ('app_dev', 'Mobile Application Development'),
+    ('cybersec', 'Cyber Security'),
+    ('ethical_hacking', 'Ethical Hacking'),
+    ('software_dev', 'Software Development'),
+    ('networking', 'Computer Networking'),
+    ('cloud_computing', 'Cloud Computing'),
+    ('iot', 'Internet of Things (IoT)'),
+    ('blockchain', 'Blockchain Technology'),
+    ('devops', 'DevOps'),
+
+    # Business and Commerce
+    ('bcom', 'Commerce'),
+    ('mba', 'Master of Business Administration'),
+    ('accounting', 'Accounting and Finance'),
+    ('marketing', 'Marketing'),
+    ('hrm', 'Human Resource Management'),
+    ('entrepreneurship', 'Entrepreneurship'),
+    ('economics', 'Economics'),
+
+    # Arts and Humanities
+    ('literature', 'English Literature'),
+    ('history', 'History'),
+    ('philosophy', 'Philosophy'),
+    ('psychology', 'Psychology'),
+    ('sociology', 'Sociology'),
+    ('political_science', 'Political Science'),
+    ('linguistics', 'Linguistics'),
+    ('fine_arts', 'Fine Arts'),
+    ('music', 'Music'),
+    ('film_studies', 'Film Studies'),
+    ('design', 'Graphic Design'),
+
+    # Science and Mathematics
+    ('math', 'Mathematics'),
+    ('physics', 'Physics'),
+    ('chemistry', 'Chemistry'),
+    ('biology', 'Biology'),
+    ('geology', 'Geology'),
+    ('statistics', 'Statistics'),
+    ('environmental_science', 'Environmental Science'),
+    ('biotech', 'Biotechnology'),
+    ('astrophysics', 'Astrophysics'),
+
+    # Engineering
+    ('mech_eng', 'Mechanical Engineering'),
+    ('civil_eng', 'Civil Engineering'),
+    ('elec_eng', 'Electrical Engineering'),
+    ('elec_comm_eng', 'Electronics and Communication Engineering'),
+    ('chemical_eng', 'Chemical Engineering'),
+    ('aero_eng', 'Aerospace Engineering'),
+    ('biomed_eng', 'Biomedical Engineering'),
+    ('robotics', 'Robotics Engineering'),
+
+    # Health and Medical
+    ('medicine', 'Medicine'),
+    ('nursing', 'Nursing'),
+    ('pharmacy', 'Pharmacy'),
+    ('dentistry', 'Dentistry'),
+    ('physiotherapy', 'Physiotherapy'),
+    ('public_health', 'Public Health'),
+
+    # Law and Governance
+    ('law', 'Law'),
+    ('criminology', 'Criminology'),
+    ('forensics', 'Forensic Science'),
+    ('international_relations', 'International Relations'),
+    ('public_admin', 'Public Administration'),
+
+    # Miscellaneous
+    ('education', 'Education'),
+    ('sports_science', 'Sports Science'),
+    ('hospitality', 'Hospitality Management'),
+    ('tourism', 'Tourism and Travel'),
+    ('culinary_arts', 'Culinary Arts'),
+    ('journalism', 'Journalism and Mass Communication'),
+    ('fashion_design', 'Fashion Design'),
+    ('animation', 'Animation'),
+    ('agriculture', 'Agriculture'),
+    ('marine_biology', 'Marine Biology'),
+    ('veterinary', 'Veterinary Science'),
+    ('ai_ml', 'Artificial Intelligence & Machine Learning'),
+]
+    course = models.CharField(max_length=50, choices=COURSE_CHOICES,default='cs')
     unit_name = models.CharField(max_length=200)
     unit_code = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return self.unit_name
     
+    def __str__(self):
+        return f"{self.unit_name} ({self.get_course_display()})"
+    
+    def save(self, *args, **kwargs):
+        # Ensure course is lowercase
+        self.course = self.course.lower()
+        super().save(*args, **kwargs)
 
 class CoursesCategory(models.Model):
     title = models.CharField(max_length=100)
