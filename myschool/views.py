@@ -10,7 +10,7 @@ from django.contrib import messages  # Import messages framework
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 
-
+from .form import ContactForm
 from django.contrib.auth.forms import AuthenticationForm
 # Create your views here.
 
@@ -22,7 +22,8 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from django.shortcuts import redirect
 
-
+def success_page(request):
+    return render(request, 'index.html')  # Create this template
 def logout_view(request):
     # Get username before logout to use in message
     username = request.user.username
@@ -116,7 +117,7 @@ def create_testimonial(request):
 
         
 
-        return redirect("success_page")
+        return redirect("homepage")
 
     return render(request, "testimonial.html",{"testimonials": testimonials,'form': form})
 
@@ -205,3 +206,93 @@ def dashboard(request):
         messages.error(request, "User profile not found")
         return redirect('mylogin')
 
+
+
+
+@login_required
+def faq(request):
+    return render(request, 'faq.html')
+
+@login_required
+def academic_guide(request):
+    return render(request, 'academic_guide.html')
+
+@login_required
+def unit_registration(request):
+    return render(request, 'unit_registration.html')
+
+@login_required
+def lecturer_evaluation(request):
+    return render(request, 'lecturer_evaluation.html')
+
+@login_required
+def course_change(request):
+    return render(request, 'course_change.html')
+
+@login_required
+def lms(request):
+    # This could redirect to your LMS system
+    return render(request, 'lms.html')
+
+# Fee-related views
+@login_required
+def fee_statement(request):
+    user_profile = request.user.myuser
+    context = {
+        'total_billed': user_profile.total_billed,
+        'total_paid': user_profile.total_paid,
+        'fee_balance': user_profile.fee_balance,
+        'transactions': user_profile.fee_transactions.all()  # Assuming related name
+    }
+    return render(request, 'fee_statement.html', context)
+
+@login_required
+def payment_receipts(request):
+    receipts = request.user.myuser.fee_transactions.filter(status='completed')
+    return render(request, 'payment_receipts.html', {'receipts': receipts})
+
+@login_required
+def make_payment(request):
+    if request.method == 'POST':
+        # Add payment processing logic here
+        pass
+    return render(request, 'make_payment.html')
+
+@login_required
+def confirm_payment(request):
+    if request.method == 'POST':
+        # Add payment confirmation logic here
+        pass
+    return render(request, 'confirm_payment.html')
+
+# Phone number management views
+@login_required
+def edit_phone_number(request):
+    if request.method == 'POST':
+        new_phone = request.POST.get('phone_number')
+        if new_phone:
+            request.user.myuser.phone_number = new_phone
+            request.user.myuser.save()
+            messages.success(request, 'Phone number updated successfully.')
+        return redirect('dashboard')
+    return render(request, 'edit_phone.html')
+
+@login_required
+def confirm_phone_number(request):
+    if request.method == 'POST':
+        # Add phone confirmation logic here
+        pass
+    return render(request, 'confirm_phone.html')
+
+@login_required
+def edit_contact(request):
+    user = request.user
+    if request.method == 'POST':
+        form = ContactForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')  # Redirect to a page like dashboard after saving
+    else:
+        form = ContactForm(instance=user)
+    
+    return render(request, 'payment.html', {'form': form})

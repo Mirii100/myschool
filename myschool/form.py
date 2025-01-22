@@ -124,5 +124,10 @@ class MyLoginForm(AuthenticationForm):
         return self.cleaned_data
 
 
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = MyUser
+        fields = ['contact']
+
 
 

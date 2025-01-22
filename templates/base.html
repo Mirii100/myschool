@@ -43,11 +43,16 @@
                 {% if user.is_authenticated %}
                     <!-- Show these items only when user is logged in -->
                     <a href="{% url 'dashboard' %}" class="nav-item nav-link active">Dashboard</a>
+                    <a href="{% url 'payment_list' %}" class="dropdown-item">my dashboard </a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                         <div class="dropdown-menu fade-down m-0">
                             <a href="{% url 'instructors' %}" class="dropdown-item">Our Team</a>
+                            <a href="{% url 'ctestmonials' %}" class="dropdown-item">create testimonial</a>
+                            <a href="{% url 'instructors' %}" class="dropdown-item">Our Team</a>
+                            
                         </div>
+                        
                     </div>
                     <a href="{% url 'logout' %}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Logout</a>
                 {% else %}

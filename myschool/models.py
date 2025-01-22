@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-
+from django_countries.fields import CountryField  
+from django.conf import settings
+import django.db.models.deletion
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
@@ -417,7 +418,7 @@ class Unit(models.Model):
     unit_name = models.CharField(max_length=200)
     unit_code = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True, null=True)
-
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1) 
     
     def __str__(self):
         return f"{self.unit_name} ({self.get_course_display()})"
@@ -793,6 +794,12 @@ class MyUser(models.Model):
         ('suspendend', 'No'),
         ('suspended', 'yes'),
     ]
+    GENDER_CHOICES = [
+    ('Male', 'Male'),
+    ('Female', 'Female'),
+    ('Other', 'Other'),
+]
+
     confirm_type = models.CharField(max_length=100, choices=CONFIRM_CHOICES)
 
     # Updated contact_hours with selectable options
@@ -821,6 +828,19 @@ class MyUser(models.Model):
     contact_hours = models.CharField(max_length=50, choices=CONTACT_HOURS_CHOICES)
     profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
     agree_terms = models.BooleanField(default=True)
+    contact = models.CharField(max_length=15, blank=True, null=True)
+    reg_no = models.CharField(max_length=20, unique=True, editable=False, null=True)  # Automatically generated
+    nationality = CountryField(null=True, blank=True)  # Dropdown for all countries
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, null=True, blank=True)
+
+
+
+
+    def save(self, *args, **kwargs):
+        # Generate a unique Reg No if not set
+        if not self.reg_no:
+            self.reg_no = f"REG-{self.user.id}-{self.user.username[:3].upper()}"
+        super().save(*args, **kwargs) 
 
     def __str__(self):
         return self.user.username

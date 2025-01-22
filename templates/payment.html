@@ -1,0 +1,180 @@
+{% extends 'base.html'%} 
+{% block title %} Dashboard {% endblock %}
+
+{% block body %} 
+    <title>Student Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    
+
+<body class="bg-gray-50">
+    <nav class="bg-yellow-500 p-4">
+        <div class="container mx-auto">
+            <h1 class="text-xl font-bold text-white">Dashboard</h1>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid md:grid-cols-4 gap-6">
+            <!-- Personal Information -->
+            <div class="dashboard-card">
+                <h2 class="text-lg font-semibold mb-4">Personal Information</h2>
+                <img src="{% if user.myuser.profile_image %}{{ user.myuser.profile_image.url }}{% else %}no image {% endif %}" 
+            alt="" 
+            class="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+            style="
+                
+                  width: 300px;  
+                  height: 300px;  
+              
+              ">
+            
+                <button class="w-full bg-orange-400 text-white py-2 px-4 rounded hover:bg-orange-500 mb-4">
+                    Update Information
+                </button>
+                
+                <div class="space-y-2">
+                    <p><strong>Name:</strong> <span id="studentName">{{ user.username }}</span></p>
+                    <p><strong>Reg No:</strong> {{ user.myuser.reg_no }}</p>
+                   
+                    <p><strong>Gender:</strong> {{ user.myuser.gender }}</p>
+                    
+                    <p><strong>Nationality:</strong> {{ user.myuser.nationality }}</p>
+                </div>
+            </div>
+
+            <!-- Middle Section -->
+            <div class="md:col-span-2 space-y-6">
+                <!-- Units Info -->
+                {% if units %}
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Unit Name</th>
+                            <th>Unit Code</th>
+                            <th>Course</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for unit in units %}
+                            <tr>
+                                <td>{{ unit.unit_name }}</td>
+                                <td>{{ unit.unit_code }}</td>
+                                <td>{{ unit.get_course_display }}</td>
+                                <td>{{ unit.description }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No units found for you.</p>
+            {% endif %}
+
+
+
+                {% if payments %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>Amount</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                    <tr>
+                        <td>{{ payment.transaction_id }}</td>
+                        <td>${{ payment.amount }}</td>
+                        <td>{{ payment.get_payment_method_display }}</td>
+                        <td>{{ payment.get_status_display }}</td>
+                        <td>{{ payment.payment_date }}</td>
+                        <td>{{ payment.description }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No payments found.</p>
+    {% endif %}
+            </div>
+
+            <!-- Right Section -->
+            <div class="space-y-6">
+                <!-- Contact Information -->
+                <div class="dashboard-card">
+                    <h2 class="text-lg font-semibold mb-4">Contact Information</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="mb-2"><strong>Phone No:</strong> {{ user.contact }}</p>
+                            <div class="flex gap-2">
+                                <!-- Edit and Submit buttons -->
+                                <form method="POST" action="{% url 'payment_list' %}">
+                                    {% csrf_token %}
+                                    <div class="flex gap-2">
+                                        <input type="text" name="contact" value="{{ user.contact }}" class="px-4 py-2 rounded text-sm" required>
+                                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded text-sm">Save Phone Number</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <p><strong>Postal Address:</strong> 6064</p>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- Fee Payment -->
+                {% if payments %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>Amount</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                    <tr>
+                        <td>{{ payment.transaction_id }}</td>
+                        <td>${{ payment.amount }}</td>
+                        <td>{{ payment.get_payment_method_display }}</td>
+                        <td>{{ payment.get_status_display }}</td>
+                        <td>{{ payment.payment_date }}</td>
+                        <td>{{ payment.description }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No payments found.</p>
+    {% endif %}
+
+                <!-- Quick Help and Links -->
+                <div class="dashboard-card">
+                    <h2 class="text-lg font-semibold mb-4">Quick Help and Links</h2>
+                    <div class="space-y-2">
+                        <p><a href="#" class="text-blue-600 hover:underline">FAQ</a></p>
+                        <p><a href="#" class="text-blue-600 hover:underline">Academic requisitions guide</a></p>
+                        <p><a href="#" class="text-blue-600 hover:underline">How Do I register for Units</a></p>
+                        <p><a href="#" class="text-blue-600 hover:underline">Lecturer Evaluation Guide</a></p>
+                        <p><a href="#" class="text-blue-600 hover:underline">Change of Course Guide</a></p>
+                        <p><a href="#" class="text-blue-600 hover:underline">LMS (Online Learning)</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    {% endblock %}
